@@ -71,14 +71,14 @@ jobs:
 
       - name: Build frontend
         working-directory: ./frontend
-        run: docker build -t ghcr.io/sreevishnu07/frontend:1.0 .
+        run: docker build -t ghcr.io/${{secrets.GITH_USERNAME}}/frontend:1.0 .
 
       - name: Build backend
         working-directory: ./backend
-        run: docker build -t ghcr.io/sreevishnu07/backend:1.0 .
+        run: docker build -t ghcr.io/${{secrets.GITH_USERNAME}}/backend:1.0 .
 
       - name: GHCR login
-        run: echo ${{secrets.GITHUB_TOKEN}} | docker login ghcr.io -u ${{secrets.GITHUB_USERNAME}} --password-stdin
+        run: echo ${{secrets.GITH_TOKEN}} | docker login ghcr.io -u ${{secrets.GITH_USERNAME}} --password-stdin
 
       - name: Backend image push
         run: docker push ghcr.io/sreevishnu07/backend:1.0
