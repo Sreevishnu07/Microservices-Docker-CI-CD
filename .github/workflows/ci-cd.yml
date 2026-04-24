@@ -46,7 +46,7 @@ jobs:
             sleep 3
           done
 
-      - name: Run backend
+      - name: Start backend
         working-directory: ./backend
         env:
           DB_HOST: 127.0.0.1
@@ -55,8 +55,12 @@ jobs:
           DB_NAME: my_db
         run: |
           node app.js &
-          sleep 5
-
+          for i in {1..10}; do
+            curl -f http://localhost:5000/api/data && break
+            echo "Waiting for backend.."
+            sleep 2
+          done
+          
       - name: Test API
         run: |
           curl -f http://localhost:5000/api/data
@@ -81,10 +85,10 @@ jobs:
         run: echo ${{secrets.GITH_TOKEN}} | docker login ghcr.io -u ${{secrets.GITH_USERNAME}} --password-stdin
 
       - name: Backend image push
-        run: docker push ghcr.io/sreevishnu07/backend:1.0
+        run: docker push ghcr.io/${{secrets.GITH_USERNAME}}/backend:1.0
 
       - name: Frontend image push
-        run: docker push ghcr.io/sreevishnu07/frontend:1.0
+        run: docker push ghcr.io/${{secrets.GITH_USERNAME}}/frontend:1.0
       
           
           
